@@ -3,6 +3,13 @@
     "dialect": "sqlite",
     "storage": "./db.development.sqlite"
   },
+  "sqldemo": {
+    "username": "root",
+    "password": null,
+    "database": "database_demo",
+    "host": "127.0.0.1",
+    "dialect": "mssql"
+  },
   "test": {
     "dialect": "sqlite",
     "storage": ":memory:"

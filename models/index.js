@@ -4,12 +4,22 @@ var fs        = require("fs");
 var path      = require("path");
 var Sequelize = require("sequelize");
 var env       = process.env.NODE_ENV || "development";
+//var env       = "sqlpassdemo";
+
 var config    = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 if (process.env.DATABASE_URL) {
   var sequelize = new Sequelize(process.env.DATABASE_URL);
 } else {
-  var sequelize = new Sequelize(config.database, config.username, config.password, config);
+  var sequelize = new Sequelize(config.database, config.username, config.password, {
+		dialect: config.dialect,
+		host: config.host,
+		
+		dialectOptions: {
+			encrypt: true // required for Azure SQL Database
+		}		
+	});
 }
+
 var db        = {};
 
 fs
