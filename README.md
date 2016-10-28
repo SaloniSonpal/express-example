@@ -1,23 +1,7 @@
 # Express Example
 
-This repository demonstrates the usage of Sequelize within an [Express](https://expressjs.com) application.
+This repository demonstrates the usage of Sequelize within an [Express](https://expressjs.com) application and SQL Server in the backend.
 The implemented logic is a simple task tracking tool.
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
-## Starting App
-
-```
-npm install
-npm start
-```
-
-This will start the application and create an sqlite database in your app dir.
-Just open [http://localhost:3000](http://localhost:3000).
-
-## Running Tests
-
-We have added some [Mocha](https://mochajs.org) based test. You can run them by `npm test`
 
 
 ## Setup in Details
@@ -114,5 +98,66 @@ function onError(error) { /* ... */ }
 function onListening() { /* ... */ }
 ```
 
+## Database Configuration
+
 And finally you have to adjust the `config/config.json` to fit your environment.
+
+In this app we will be using SQL Server database. Update config.json to include:
+
+```js
+// config.json
+// ...
+  "sqldemo": {
+    "username": "login",
+    "password": "password",
+    "database": "TasklistDB",
+    "host": "127.0.0.1",
+    "dialect": "mssql"
+}
+```
+
+You can also preselect the environment. Before running your app, you can do this in console,
+```js
+export NODE_ENV=sqldemo
+```
+Or if you are in windows you could try this:
+```js
+SET NODE_ENV=sqldemo
+```
+
+And here's where the connection parameters are read from config.json depending on the environment set:
+
+```js
+// index.js
+// ...
+var env       = process.env.NODE_ENV || "development";
+
+var config    = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
+if (process.env.DATABASE_URL) {
+  var sequelize = new Sequelize(process.env.DATABASE_URL);
+} else {
+  var sequelize = new Sequelize(config.database, config.username, config.password, {
+		dialect: config.dialect,
+		host: config.host,
+		dialectOptions: {
+			encrypt: true // required for Azure SQL Database
+		}		
+	});
+}
+// ...
+```
 Once thats done, your database configuration is ready!
+
+## Starting App
+
+```bash
+npm install
+npm start
+```
+
+This will start the application and create all the schema objects SQL Server database required by your app.
+Just open [http://localhost:3000](http://localhost:3000).
+
+## Running Tests
+
+We have added some [Mocha](https://mochajs.org) based test. You can run them by `npm test` 
