@@ -4,9 +4,9 @@
     "storage": "./db.development.sqlite"
   },
   "sqldemo": {
-    "username": "root",
-    "password": null,
-    "database": "database_demo",
+    "username": "login",
+    "password": "password",
+    "database": "TasklistDB",
     "host": "127.0.0.1",
     "dialect": "mssql"
   },
